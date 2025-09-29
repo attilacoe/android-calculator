@@ -15,13 +15,13 @@ orientation = portrait
 log_level = 2
 
 [android]
-api = 33
+api = 30
 minapi = 21
-ndk = 25b
+ndk = 21.4.7075529
 
-# اضافه کردن این خطوط برای حل مشکل licenses
+# اضافه کردن این خطوط
 android.accept_sdk_license = True
-android.sdk_dir = /home/runner/.buildozer/android/platform/android-sdk
+android.auto_accept_license = True
 
 [android:tool]
 android_sdk_tools_revision = 26.1.1
