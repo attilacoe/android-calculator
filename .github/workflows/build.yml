@@ -1,4 +1,4 @@
-name: Build APK
+name: Flutter Build
 
 on:
   push:
@@ -10,39 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # گرفتن کد از ریپو
       - uses: actions/checkout@v4
 
-      # نصب پیش‌نیازها
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19.0"
+
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            python3 python3-pip \
-            openjdk-17-jdk unzip git zip \
-            libffi-dev libssl-dev \
-            autoconf automake libtool \
-            pkg-config zlib1g-dev \
-            libncurses5 libstdc++6
+        run: flutter pub get
 
-          pip install --upgrade pip
-          pip install cython buildozer
-
-      # اگر فایل buildozer.spec نبود، بساز
-      - name: Initialize buildozer
-        run: |
-          if [ ! -f buildozer.spec ]; then
-            buildozer init
-          fi
-
-      # بیلد کردن APK
       - name: Build APK
-        run: |
-          buildozer -v android debug
+        run: flutter build apk --debug
 
-      # ذخیره APK به عنوان Artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: calculator-apk
-          path: bin/*.apk
+          name: android-calculator-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
