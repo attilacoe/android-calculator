@@ -7,11 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
+      # گرفتن کد از ریپو
       - uses: actions/checkout@v3
 
+      # نصب پیش‌نیازها
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -20,19 +22,25 @@ jobs:
             openjdk-17-jdk unzip git zip \
             libffi-dev libssl-dev \
             autoconf automake libtool \
-            pkg-config zlib1g-dev
+            pkg-config zlib1g-dev \
+            libncurses5 libstdc++6
 
           pip install --upgrade pip
           pip install cython buildozer
 
+      # اگر فایل buildozer.spec نبود، بساز
       - name: Initialize buildozer
         run: |
-          buildozer init || true
+          if [ ! -f buildozer.spec ]; then
+            buildozer init
+          fi
 
+      # بیلد کردن APK
       - name: Build APK
         run: |
           buildozer -v android debug
 
+      # ذخیره APK به عنوان Artifact
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
